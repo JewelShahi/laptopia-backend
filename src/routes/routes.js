@@ -11,8 +11,13 @@ import discounts from "./discounts.js";
 // chatroom and chat messages
 import chat from "./chat.js";
 
+// Authentication routes
+import auth from "./auth.js";
+
+
 const router = Router();
 
+router.use("/auth", auth)
 router.use("/products", products);
 router.use("/users", users);
 router.use("/comments", comments);

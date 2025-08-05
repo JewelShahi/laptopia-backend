@@ -70,7 +70,7 @@ const userSchema = new mongoose.Schema(
     },
     avatarUrl: {
       type: String,
-      default: "",
+      default: "https://res.cloudinary.com/dps0iyqjl/image/upload/default-user_dygm0i.png",
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,

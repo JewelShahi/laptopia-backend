@@ -1,5 +1,5 @@
 import Comment from "../models/Comment.js";
-import Recipe from "../models/Recipe.js";
+import Product from "../models/Product.js";
 import User from "../models/User.js";
 
 const getAllComments = async (req, res) => {
@@ -14,7 +14,6 @@ const getAllComments = async (req, res) => {
 
     res.status(200).json(comments);
   } catch (error) {
-    console.log("Internal server error");
     res.status(500).json({
       message: "Internal server error",
       error: error.message,
@@ -22,26 +21,26 @@ const getAllComments = async (req, res) => {
   }
 };
 
-const getAllRecipeComments = async (req, res) => {
+const getAllProductComments = async (req, res) => {
   try {
-    const { id } = req.params;
-    const fRecipe = await Recipe.findById(id);
+    const { productId } = req.params;
+    const fProduct = await Product.findById(productId);
 
-    if (!fRecipe) {
+    if (!fProduct) {
       return res.status(404).json({
-        message: "Recipe not found",
+        message: "Product was not found",
       });
     }
 
-    const recipeComments = await Comment.find({ recipe: id });
+    const productComments = await Comment.find({ product: productId });
 
-    if (recipeComments.length === 0) {
+    if (productComments.length === 0) {
       return res.status(200).json({
-        message: "No comments found for this recipe",
+        message: "No comments found for this product",
       });
     }
 
-    res.status(200).json(recipeComments);
+    res.status(200).json(productComments);
   } catch (error) {
     console.error("Internal server error");
     res.status(500).json({
@@ -53,16 +52,9 @@ const getAllRecipeComments = async (req, res) => {
 
 const getAllUserComments = async (req, res) => {
   try {
-    const { id } = req.params;
-    const fUser = await User.findById(id);
+    const userId = req.user._id;
 
-    if (!fUser) {
-      return res.status(404).json({
-        message: "User not found",
-      });
-    }
-
-    const userComments = await Comment.find({ user: id });
+    const userComments = await Comment.find({ user: userId });
 
     if (userComments.length === 0) {
       return res.status(200).json({
@@ -81,7 +73,7 @@ const getAllUserComments = async (req, res) => {
 
 const getCommentById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { commentId } = req.params;
     const comment = await Comment.findById(id);
 
     if (!comment) {
@@ -102,19 +94,15 @@ const getCommentById = async (req, res) => {
 
 const createComment = async (req, res) => {
   try {
-    const { user, recipe, text } = req.body;
+    const { productId, comment, rating} = req.body;
+    const userId = req.user._id;
 
-    const fUser = await User.findById(user);
-    if (!fUser) {
-      return res.status(404).json({ message: "User not found" });
+    const fProduct = await Product.findById(productId);
+    if (!fProduct) {
+      return res.status(404).json({ message: "Product was not found" });
     }
 
-    const fRecipe = await Recipe.findById(recipe);
-    if (!fRecipe) {
-      return res.status(404).json({ message: "Recipe not found" });
-    }
-
-    const newComment = await Comment.create({ user, recipe, text });
+    const newComment = await Comment.create({ userId, productId, comment, rating });
 
     res.status(201).json(newComment);
   } catch (error) {
@@ -128,7 +116,7 @@ const createComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { commentId } = req.params;
 
     const comment = await Comment.findById(id);
     if (!comment) {
@@ -150,7 +138,7 @@ const deleteComment = async (req, res) => {
 export {
   getAllComments,
   getAllUserComments,
-  getAllRecipeComments,
+  getAllProductComments,
   getCommentById,
   createComment,
   deleteComment,

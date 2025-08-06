@@ -39,7 +39,6 @@ const orderSchema = new mongoose.Schema(
         required: [true, "DB postal code is required"],
         minlength: [3, "DB postal code must be at least 3 characters"],
         maxlength: [10, "DB postal code must be at most 10 characters"],
-        // Postal Code has letters, digits, spaces, hyphens only
         validate: {
           validator: function (v) {
             return /^[A-Za-z0-9\s-]+$/.test(v);
@@ -53,12 +52,15 @@ const orderSchema = new mongoose.Schema(
         required: [true, "DB country is required"],
         trim: true,
       },
-      validate: {
-        validator: function (value) {
-          const phoneNumber = parsePhoneNumberFromString(value);
-          return phoneNumber ? phoneNumber.isValid() : false;
+      phone: {
+        type: String,
+        validate: {
+          validator: function (value) {
+            const phoneNumber = parsePhoneNumberFromString(value);
+            return phoneNumber ? phoneNumber.isValid() : false;
+          },
+          message: (props) => `DB ${props.value} is not a valid phone number!`,
         },
-        message: (props) => `DB ${props.value} is not a valid phone number!`,
       },
     },
   },

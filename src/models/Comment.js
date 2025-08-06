@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import filterText from "../validations/filterText.js";
+import filterText from "../validations/filterBadWords/filterBadWords.js";
 import Product from "./Product.js"; // Adjust path as needed
 
 const commentSchema = new mongoose.Schema(

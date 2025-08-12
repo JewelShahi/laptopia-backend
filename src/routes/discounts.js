@@ -5,7 +5,7 @@ import {
   getDiscountById,
   createDiscount,
   updateDiscount,
-  delteDiscount,
+  deleteDiscount,
 } from "../controllers/discountsController.js";
 
 // Middleware to protect routes
@@ -18,6 +18,6 @@ router.get('/', protect, getAllDiscounts);
 router.get("/:id", protect, getDiscountById);
 router.post("/", protect, createDiscount);
 router.patch("/:id", protect, updateDiscount);
-router.delete("/:id", protect, delteDiscount);
+router.delete("/:id", protect, deleteDiscount);
 
 export default router;
